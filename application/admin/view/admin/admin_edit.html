@@ -1,0 +1,95 @@
+{include file='public/header' /}
+    
+    <body>
+        <div class="x-body">
+            <form class="layui-form">
+                <div class="layui-form-item">
+                    <label for="username" class="layui-form-label">
+                        <span class="x-red">*</span>登录名
+                    </label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="username" name="username" required="" lay-verify="required" value="{$admin.username}"
+                        autocomplete="off" class="layui-input"disabled>
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">
+                        <span class="x-red">*</span>用户名不得修改
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label for="L_email" class="layui-form-label">
+                        <span class="x-red">*</span>邮箱
+                    </label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="L_email" name="email" required="" lay-verify="email" value="{$admin.email}"
+                        autocomplete="off" class="layui-input">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">
+                        <span class="x-red">*</span>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label for="L_pass" class="layui-form-label">
+                        <span class="x-red">*</span>新密码
+                    </label>
+                    <div class="layui-input-inline">
+                        <input type="password" id="L_pass" name="password"  class="layui-input" value="" placeholder="密码">
+                    </div>
+
+                </div>
+
+                <!--添加隐藏字段-->
+                <input type="hidden" name="id" value="{$Think.session.user_info.id}">
+                <input type="hidden" name="is_update" value="{$Think.session.user_info.is_update}">
+
+
+                <div class="layui-form-item">
+                    <label for="L_repass" class="layui-form-label">
+                    </label>
+                    <button  class="layui-btn" lay-filter="save" lay-submit="" id="submit">
+                        保存
+                    </button>
+                </div>
+            </form>
+        </div>
+       {include file='public/base_js' /}
+        <script>
+            layui.use(['form','layer'], function(){
+                $ = layui.jquery;
+              var form = layui.form()
+              ,layer = layui.layer;
+            
+
+
+              
+              
+            });
+        </script>
+
+        <script>
+            $(function(){
+                $("#submit").on('click',function(){
+                    $.ajax({
+                        type: 'POST',
+                        url: "{:url('admin/update')}",
+                        data: $(".layui-form").serialize(),
+                        dataType: "json",
+                        success: function(data){
+                            console.log(data);
+                            if (data.status == 1) {
+                                alert(data.message);
+                                window.location.href = "{:url('admin/index')}";
+                            } else {
+                                alert(data.message);
+                                window.location.href = "{:url('admin/edit')}";
+                            }
+                        }
+                    })
+                })
+            })
+        </script>
+
+    </body>
+
+</html>

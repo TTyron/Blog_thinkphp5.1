@@ -1,0 +1,175 @@
+{include file='public/header' /}
+<body>
+<div class="x-nav">
+            <span class="layui-breadcrumb">
+              <a><cite>首页</cite></a>
+              <a><cite>关于我管理</cite></a>
+              <a><cite>关于我列表</cite></a>
+            </span>
+    <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right"  href="javascript:location.replace(location.href);" title="刷新"><i class="layui-icon" style="line-height:30px">ဂ</i></a>
+</div>
+<div class="x-body">
+    <xblock>
+
+        <button class="layui-btn" onclick="about_add('添加文章','{:url("create")}','800','500')">
+        <i class="layui-icon">&#xe608;</i>
+        添加
+        </button>
+        <!--<span class="x-right" style="line-height:40px">共有数据： 条</span>-->
+    </xblock>
+    <table class="layui-table">
+        <thead>
+        <tr>
+
+            <th>
+                ID
+            </th>
+            <th>
+                头像图片
+            </th>
+
+            <th>
+                内容
+            </th>
+
+            <th>
+               职业
+            </th>
+            <th>
+                微信号
+            </th>
+            <th>
+                邮箱
+            </th>
+            <th>
+               个性签名
+            </th>
+
+            <th>
+                操作
+            </th>
+        </tr>
+        </thead>
+        <tbody id="x-img">
+
+         {volist name='listData' id='vo'}
+
+        <tr>
+
+            <td>
+                {$vo.id}
+            </td>
+            <td>
+                {$vo.image}
+            </td>
+
+            <td >
+                {$vo.content}
+            </td>
+
+            <td>
+                {$vo.occupation}
+            </td>
+
+            <td>
+                {$vo.wechat}
+            </td>
+
+            <td>
+                {$vo.email}
+            </td>
+            <td>
+                {$vo.autograph}
+            </td>
+
+            <td class="td-manage">
+
+                <a title="编辑" href="javascript:;" onclick="about_edit('编辑','{:url("edit")}'+'?id='+{$vo.id},'4','','510')"
+                class="ml-5" style="text-decoration:none">
+                <i class="layui-icon">&#xe642;</i>
+                </a>
+                <a title="删除" href="javascript:;" onclick="about_del(this,'{$vo.id}')"
+                   style="text-decoration:none">
+                    <i class="layui-icon">&#xe640;</i>
+                </a>
+            </td>
+        </tr>
+        {/volist}
+        </tbody>
+    </table>
+
+    <div id="page">
+        {$listData->render()}
+    </div>
+</div>
+{include file='public/base_js' /}
+<script>
+    layui.use(['laydate','element','laypage','layer'], function(){
+        $ = layui.jquery;//jquery
+        laydate = layui.laydate;//日期插件
+        lement = layui.element();//面包导航
+        laypage = layui.laypage;//分页
+        layer = layui.layer;//弹出层
+
+        //以上模块根据需要引入
+
+        layer.ready(function(){ //为了layer.ext.js加载完毕再执行
+            layer.photos({
+                photos: '#x-img'
+                //,shift: 5 //0-6的选择，指定弹出图片动画类型，默认随机
+            });
+        });
+
+    });
+
+    //批量删除提交
+    function delAll () {
+        layer.confirm('确认要删除吗？',function(index){
+            //捉到所有被选中的，发异步进行删除
+            layer.msg('删除成功', {icon: 1});
+        });
+    }
+    /*添加*/
+    function about_add(title,url,w,h){
+        x_admin_show(title,url,w,h);
+    }
+    /*停用*/
+    function about_stop(obj,id){
+        layer.confirm('确认不显示吗？',function(index){
+            //发异步把用户状态进行更改
+            $(obj).parents("tr").find(".td-manage").prepend('<a style="text-decoration:none" onClick="about_start(this,id)" href="javascript:;" title="显示"><i class="layui-icon">&#xe62f;</i></a>');
+            $(obj).parents("tr").find(".td-status").html('<span class="layui-btn layui-btn-disabled layui-btn-mini">不显示</span>');
+            $(obj).remove();
+            layer.msg('不显示!',{icon: 5,time:1000});
+        });
+    }
+
+    /*启用*/
+    function about_start(obj,id){
+        layer.confirm('确认要显示吗？',function(index){
+            //发异步把用户状态进行更改
+            $(obj).parents("tr").find(".td-manage").prepend('<a style="text-decoration:none" onClick="about_stop(this,id)" href="javascript:;" title="不显示"><i class="layui-icon">&#xe601;</i></a>');
+            $(obj).parents("tr").find(".td-status").html('<span class="layui-btn layui-btn-normal layui-btn-mini">已显示</span>');
+            $(obj).remove();
+            layer.msg('已显示!',{icon: 6,time:1000});
+        });
+    }
+    // 编辑
+    function about_edit (title,url,id,w,h) {
+        x_admin_show(title,url,w,h);
+    }
+    /*删除*/
+    function about_del(obj,id){
+        layer.confirm('确认要删除吗？',function(index){
+            //发异步删除数据
+            $.get("{:url('delete')}",{id:id});
+
+
+            $(obj).parents("tr").remove();
+            layer.msg('已删除!',{icon:1,time:1000});
+        });
+    }
+</script>
+
+</body>
+</html>

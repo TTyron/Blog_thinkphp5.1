@@ -1,0 +1,100 @@
+<html>
+{include file='public/header' /}
+<body>
+<div class="x-body">
+    <form class="layui-form" enctype="multipart/form-data" method="post" action="{:url('update')}">
+        <div class="layui-form-item">
+            <label for="content" class="layui-form-label">
+                <span class="x-red">*</span>内容</label>
+                <div class="col-sm-6">
+                    <label>
+                        <textarea name="content" id="content"></textarea>
+                    </label>
+                </div>
+        </div>
+            <div class="layui-form-item">
+                <label for="image" class="layui-form-label">
+                    <span class="x-red">*</span>图片
+                </label>
+                <div class="col-sm-6">
+                    <input id="url" placeholder="" name="url" type="file">
+                </div>
+            </div>
+        <div class="layui-form-item">
+            <label for="occupation" class="layui-form-label">
+                <span class="x-red">*</span>职业</label>
+            <div class="col-sm-6">
+                <input class="form-control" id="occupation" placeholder="" name="occupation" type="text">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="wechat" class="layui-form-label">
+                <span class="x-red">*</span>微信号</label>
+            <div class="col-sm-6">
+                <input class="form-control" id="wechat" placeholder="" name="wechat" type="text">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="email" class="layui-form-label">
+                <span class="x-red">*</span>邮箱</label>
+            <div class="col-sm-6">
+                <input class="form-control" id="email" placeholder="" name="email" type="text">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="autograph" class="layui-form-label">
+                <span class="x-red">*</span>个性签名</label>
+            <div class="col-sm-6">
+                <input class="form-control" id="autograph" placeholder="" name="autograph" type="text">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="L_repass" class="layui-form-label">
+            </label>
+            <button  class="layui-btn" lay-filter="add" lay-submit="" type="submit">
+                保存
+            </button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </form>
+</div>
+{include file='public/base_js' /}
+<script>
+    layui.use(['form','layer'], function(){
+        $ = layui.jquery;
+        var form = layui.form(),
+            layer = layui.layer;
+    });
+</script>
+
+<script>
+    $(function(){
+        $("#submit").on('click',function(){
+            $.ajax({
+                type: 'POST',
+                url: "{:url('about/update')}",
+                data: $(".layui-form").serialize(),
+                dataType: "json",
+                success: function(data){
+                    console.log(data);
+                    if (data.status == 1) {
+                        alert(data.message);
+                        window.location.href = "{:url('about/index')}";
+                    } else {
+                        alert(data.message);
+                        window.location.href = "{:url('about/edit')}";
+                    }
+                }
+            })
+        })
+    })
+</script>
+
+<script src="__STATIC__/ueditor/ueditor.config.js"></script>
+<script src="__STATIC__/ueditor/ueditor.all.min.js"></script>
+<script src="__STATIC__/ueditor/lang/zh-cn/zh-cn.js"></script>
+<script type="text/javascript">
+    UE.getEditor('content',{initialFrameWidth:800,initialFrameHeight:400,});
+</script>
+</body>
+</html>
